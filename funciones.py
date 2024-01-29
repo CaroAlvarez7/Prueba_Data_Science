@@ -25,13 +25,9 @@ def conexion_bd(tabla):
 
     # Almacenar en un DataFrame los datos a Leer en la tabla de la BD
     df = pd.read_sql(query, engine)
-
-    # Imprimir el DataFrame
-   
-    #print(f'\n Dataframe {tabla}: \n{df.head(2)}')
-    print(f'Tamaño del dataframe {tabla}: {df.shape}')
-    #print(df)
     
+    print(f'Tamaño del dataframe {tabla}: {df.shape}')
+            
     return df
 
 
@@ -43,18 +39,15 @@ def clean_data(df):
            Entradas:
                 df = dataframe  
             Salidas:
-                Dataframe transformado"""
-    
-    #crear un bucle aplicado a las columnas de un DataFrame que se almacenan en una lista (df).
-    #Este código realiza una serie de operaciones en cada nombre de columna del DataFrame
+                Dataframe depurado"""
+        
+    #Eliminar espacios en los nombres de las columnas y conertir todas en mayúsculas
     df.columns = [x.strip().replace(" ", "_").upper() for x in df.columns] 
-    #Strip elimina espacios al principio y final de la cadena, replace se utiliza para 
-    #cambiar los espacios por otro caracter, upper para colocar todas las palabras en mayuscula
-    
+   
     #almacenar en una variable las columnas de tipo texto 
     df_obj = df.select_dtypes(include="object")
 
-    #Almacenar en una variable las columnas numericas
+    #Almacenar en una variable las columnas numéricas
     num_columns = df.select_dtypes(include="number").columns
 
     #aplicar la función lambda se aplica a todas las columnas tipo texto, y elimina los espacios en blanco
@@ -74,6 +67,9 @@ def clean_data(df):
 
 
 def strip_accents(s):
+   """Función para eliminar acentos 
+         entrada: cadena de string a procesar
+         salida: cadena de string sin acentos"""
    import unicodedata
    return ''.join(c for c in unicodedata.normalize('NFD', s)
                   if unicodedata.category(c) != 'Mn')
@@ -87,6 +83,7 @@ def boxplot_numeric_variables_plotly(df,column):
         df (pd.DataFrame): El DataFrame de entrada.
     Salida:
         None"""
+    
     # Filtrar las columnas numéricas sin tener en cuenta, nis, ni, nif
     columnas_numericas = df.select_dtypes(include=['int', 'float']).columns.tolist()
 
